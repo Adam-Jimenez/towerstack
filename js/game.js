@@ -29,7 +29,9 @@ class Game {
 
         this.state = STATE.IDLE
         this.direction = 1;
-        this.speed = 4;
+        this.speed = 1;
+        this.score = 0;
+        this.updateScore();
         this.registerSpacePress();
     }
     registerSpacePress() {
@@ -38,25 +40,38 @@ class Game {
             if (this.state === STATE.OSCILLATE_NEW_BLOCK && evt.keyCode == 32) {
                 if (this.newBlock.clipTo(this.top) < 0) {
                     this.state = STATE.LOST
-                } else {
-                    this.top = this.newBlock;
-                    this.newBlock = null;
-                    this.state = STATE.PLACE_NEW_BLOCK;
-                }
+                    return
+                } 
+                this.top = this.newBlock;
+                this.newBlock = null;
+                this.score += 1;
+                this.speed += 0.5;
+                this.updateScore();
+                this.cameraFollowTop();
+                this.state = STATE.PLACE_NEW_BLOCK;
             }
         };
     }
+    cameraFollowTop() {
+        this.viewer.camera.position.set(1000,this.top.mesh.position.y+800,1000);
+        this.viewer.camera.lookAt(0,this.top.mesh.position.y+200,0);
+    }
+    updateScore() {
+        const div = document.getElementById("score");
+        div.innerText = this.score;
+    }
     placeNewBlock() {
         this.newBlock = new Block()
-        this.newBlock.mesh.position.y = this.top.mesh.position.y + this.top.dimensions.y + 10;
+        this.newBlock.mesh.position.x = -250;
+        this.newBlock.mesh.position.y = this.top.mesh.position.y + this.top.dimensions.y + 5;
         this.viewer.scene.add(this.newBlock.mesh);
         this.state = STATE.OSCILLATE_NEW_BLOCK;
     }
     oscillateNewBlock() {
-        if (this.newBlock.mesh.position.x > 200 && this.direction > 0) {
+        if (this.newBlock.mesh.position.x > 250 && this.direction > 0) {
             this.direction *= -1;
         }
-        if (this.newBlock.mesh.position.x < -200 && this.direction < 0) {
+        if (this.newBlock.mesh.position.x < -250 && this.direction < 0) {
             this.direction *= -1;
         }
         this.newBlock.mesh.position.x += this.speed * this.direction;

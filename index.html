@@ -112,6 +112,14 @@ path.two {
         fill: white;
     }
 }
+#score {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 60px;
+}
         </style>
 
         <script src="http://threejs.org/build/three.min.js"></script>
@@ -119,6 +127,8 @@ path.two {
         <script src="./js/viewer.js"></script>
         <script src="./js/game.js"></script>
     <body>
+        <div id="score">
+        </div>
         <div class="wrapper">
             <a id="cta" class="cta" href="#">
                 <span>START</span>
@@ -143,6 +153,7 @@ path.two {
         <canvas id="viewer"></canvas>
         <script src="./js/index.js"></script>
     </body>
+
 
 
 </html>
